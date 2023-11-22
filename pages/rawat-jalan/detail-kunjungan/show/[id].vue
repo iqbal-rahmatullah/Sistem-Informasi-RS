@@ -1,0 +1,1 @@
+<template>Bingung bro karo route + name file + formatter :) div e ga roto</template>
