@@ -31,7 +31,7 @@
     "pinia": "^2.1.7",
     "sass": "^1.69.5",
     "sass-loader": "^13.3.2",
-    "sweetalert2": "^11.10.1",
+    "sweetalert2": "^11.6.13",
     "vue3-apexcharts": "^1.4.4"
   }
 }

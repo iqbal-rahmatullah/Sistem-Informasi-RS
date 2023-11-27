@@ -27,7 +27,7 @@
                     :value="kunjungan.id"
                     :key="kunjungan.id"
                   >
-                    (Kunjungan-{{ kunjungan.id }}) - {{ kunjungan.pasien.nama }}
+                    (Kunjungan-{{ kunjungan.id }}) - {{ kunjungan.nama_pasien}}
                   </option>
                 </select>
               </fieldset>
@@ -84,6 +84,7 @@
 
 <script>
 import axios from "axios"
+import Swal from 'sweetalert2'
 export default {
   data() {
     return {
@@ -99,20 +100,44 @@ export default {
     }
   },
   beforeMount() {
-    // this.getDataKunjungan()
+    this.getDataLab()
     this.getDataKunjungan()
+    this.getDokters()
   },
   methods: {
-    async submitForm() {},
+    async submitForm() {
+      try {
+        const response = await axios.post('http://103.101.224.67:8083/resultslab', this.formData)
+        if (response.status == 200) {
+          Swal.fire({
+            title: "Berhasil!",
+            text: "Data lab berhasil di tambahkan!",
+            icon: "success",
+          })
+
+          this.$router.push("/lab-radiologi/result-lab")
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getDokters(){
+      try {
+        const response = await axios.get('http://103.101.224.67:8083/dokters')
+        this.dokters = response.data.data
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getDataKunjungan() {
       const response = await axios.get(
         "http://103.101.224.67:8081/api/v1/kunjungan/"
       )
-      console.log(response.data.data)
+      this.kunjungans = response.data.data
     },
     async getDataLab() {
       try {
-        const response = await axios.get("http://localhost:8000/labs")
+        const response = await axios.get("http://103.101.224.67:8083/labs")
         this.labs = response.data.data
       } catch (error) {
         console.error(error)

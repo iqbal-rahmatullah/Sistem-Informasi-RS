@@ -74,7 +74,7 @@
                   <td>
                     <div class="d-flex justify-content-center gap-2">
                       <NuxtLink
-                        :to="`/resultLab/edit/${result.id}`"
+                        :to="`/lab-radiologi/result-lab/edit/${result.id}`"
                         class="btn btn-info rounded text-white"
                         style="outline: none"
                       >
