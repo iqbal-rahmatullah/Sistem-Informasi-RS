@@ -8,7 +8,7 @@
               <dl class="row">
                 <dt class="col-sm-3">Nama</dt>
                 <dd class="col-sm-9">
-                  :<b> {{ resultLab.pasien.nama }}</b>
+                  : <b> {{ resultLab.pasien.nama }}</b>
                 </dd>
 
                 <dt class="col-sm-3">Jenis Kelamin</dt>

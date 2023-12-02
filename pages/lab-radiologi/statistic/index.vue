@@ -16,18 +16,6 @@
         </div>
       </div>
     </div>
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-          <h4>Data Pasien Lab Tiap Laboratorium</h4>
-        </div>
-        <div
-          class="card-body"
-          id="chartPasienLab"
-          style="display: flex; justify-content: center; align-items: center"
-        ></div>
-      </div>
-    </div>
   </div>
 </template>
 

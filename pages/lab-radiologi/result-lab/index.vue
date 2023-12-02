@@ -57,13 +57,14 @@
                     >
                   </td>
                   <td class="text-center">
-                    <NuxtLink
+                    <a
                       v-if="result.status === 'success'"
-                      :to="`/resultLab/download/${result.id}`"
+                      :href="`http://103.101.224.67:8083/result-lab/${result.hasil_lab}`"
+                      target="_blank"
                       class="btn btn-light"
                     >
                       <i class="bi bi-download"></i>
-                    </NuxtLink>
+                    </a>
                     <button v-else class="btn btn-light" disabled>
                       <i class="bi bi-x-circle"></i>
                     </button>
@@ -83,7 +84,7 @@
                       <button
                         class="btn btn-danger rounded"
                         style="outline: none"
-                        @click="confirmDelete(result.id)"
+                        @click="showDeleteModal(result.id)"
                       >
                         <i class="bi bi-trash"></i>
                       </button>
@@ -136,6 +137,37 @@ export default {
       } catch (error) {
         console.error("Error fetching result lab data:", error)
       }
+    },
+    showDeleteModal(id) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "Data akan dihapus selamanya!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            const response = await axios.delete(
+              "http://103.101.224.67:8083/resultslab/" + id
+            )
+
+            if (response.status == 200) {
+              Swal.fire({
+                title: "Deleted!",
+                text: "Data lab berhasil di hapus.",
+                icon: "success",
+              })
+
+              this.getResulLab()
+            }
+          } catch (error) {
+            console.error("Failed to delete" + error.message)
+          }
+        }
+      })
     },
   },
 }
