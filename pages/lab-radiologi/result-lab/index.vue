@@ -37,70 +37,72 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="result in resultLabs" :key="result.id">
-                  <td class="text-center">{{ result.id }}</td>
-                  <td class="text-center">
-                    {{ result.pasien.nama }}
-                  </td>
-                  <td class="text-center">{{ result.lab.name }}</td>
-                  <td class="text-center">{{ result.user.name }}</td>
-                  <td class="text-center">
-                    <span
-                      v-if="result.status === 'success'"
-                      class="badge bg-success"
-                      >Success</span
-                    >
-                    <span
-                      v-else-if="result.status === 'proses' || !result.status"
-                      class="badge bg-warning"
-                      >Proses</span
-                    >
-                  </td>
-                  <td class="text-center">
-                    <a
-                      v-if="result.status === 'success'"
-                      :href="`http://103.101.224.67:8083/result-lab/${result.hasil_lab}`"
-                      target="_blank"
-                      class="btn btn-light"
-                    >
-                      <i class="bi bi-download"></i>
-                    </a>
-                    <button v-else class="btn btn-light" disabled>
-                      <i class="bi bi-x-circle"></i>
-                    </button>
-                  </td>
-                  <td class="text-center">
-                    {{ new Date(result.created_at).toLocaleDateString() }}
-                  </td>
-                  <td>
-                    <div class="d-flex justify-content-center gap-2">
-                      <NuxtLink
-                        :to="`/lab-radiologi/result-lab/edit/${result.id}`"
-                        class="btn btn-info rounded text-white"
-                        style="outline: none"
-                      >
-                        <i class="bi bi-pencil-square"></i>
-                      </NuxtLink>
-                      <button
-                        class="btn btn-danger rounded"
-                        style="outline: none"
-                        @click="showDeleteModal(result.id)"
-                      >
-                        <i class="bi bi-trash"></i>
-                      </button>
-                      <NuxtLink
-                        :to="`/lab-radiologi/result-lab/details/${result.id}`"
-                        class="btn btn-primary rounded text-white"
-                        style="outline: none"
-                      >
-                        <i class="bi bi-eye-fill"></i>
-                      </NuxtLink>
-                    </div>
-                  </td>
-                </tr>
                 <tr v-if="resultLabs.length === 0">
                   <td class="text-center" colspan="8">Belum ada data</td>
                 </tr>
+                <template v-else>
+                  <tr v-for="result in resultLabs" :key="result.id">
+                    <td class="text-center">{{ result.id }}</td>
+                    <td class="text-center">
+                      {{ result.pasien.nama }}
+                    </td>
+                    <td class="text-center">{{ result.lab.name }}</td>
+                    <td class="text-center">{{ result.user.name }}</td>
+                    <td class="text-center">
+                      <span
+                        v-if="result.status === 'success'"
+                        class="badge bg-success"
+                        >Success</span
+                      >
+                      <span
+                        v-else-if="result.status === 'proses' || !result.status"
+                        class="badge bg-warning"
+                        >Proses</span
+                      >
+                    </td>
+                    <td class="text-center">
+                      <a
+                        v-if="result.status === 'success'"
+                        :href="`http://103.101.224.67:8083/result-lab/${result.hasil_lab}`"
+                        target="_blank"
+                        class="btn btn-light"
+                      >
+                        <i class="bi bi-download"></i>
+                      </a>
+                      <button v-else class="btn btn-light" disabled>
+                        <i class="bi bi-x-circle"></i>
+                      </button>
+                    </td>
+                    <td class="text-center">
+                      {{ new Date(result.created_at).toLocaleDateString() }}
+                    </td>
+                    <td>
+                      <div class="d-flex justify-content-center gap-2">
+                        <NuxtLink
+                          :to="`/lab-radiologi/result-lab/edit/${result.id}`"
+                          class="btn btn-info rounded text-white"
+                          style="outline: none"
+                        >
+                          <i class="bi bi-pencil-square"></i>
+                        </NuxtLink>
+                        <button
+                          class="btn btn-danger rounded"
+                          style="outline: none"
+                          @click="showDeleteModal(result.id)"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                        <NuxtLink
+                          :to="`/lab-radiologi/result-lab/details/${result.id}`"
+                          class="btn btn-primary rounded text-white"
+                          style="outline: none"
+                        >
+                          <i class="bi bi-eye-fill"></i>
+                        </NuxtLink>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
@@ -133,6 +135,7 @@ export default {
         const response = await axios.get(
           "http://103.101.224.67:8083/resultslab"
         )
+        // console.log(response.data.data)
         this.resultLabs = response.data.data
       } catch (error) {
         console.error("Error fetching result lab data:", error)

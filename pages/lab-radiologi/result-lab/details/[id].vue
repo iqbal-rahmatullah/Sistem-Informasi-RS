@@ -73,7 +73,8 @@
                   <td class="text-center">
                     <a
                       v-if="resultLab.status === 'success'"
-                      :href="downloadLink"
+                      :href="`http://103.101.224.67:8083/result-lab/${resultLab.hasil_lab}`"
+                      target="_blank"
                       class="btn btn-light"
                     >
                       <i class="bi bi-download"></i>

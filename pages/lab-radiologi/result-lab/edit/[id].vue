@@ -99,7 +99,7 @@
                     <textarea
                       style="resize: none"
                       class="form-control"
-                      v-model="description"
+                      v-model="dataForm.description"
                       cols="30"
                       rows="10"
                     ></textarea>
@@ -126,17 +126,18 @@
 </template>
 
 <script>
-import axios from "axios";
-import Swal from "sweetalert2";
+import axios from "axios"
+import Swal from "sweetalert2"
 export default {
   data() {
     return {
       dataForm: {
         kunjungan_id: null,
         user_id: null,
-        hasil_lab: null,
+        hasil_lab: {},
         status: null,
         lab_id: null,
+        description: null,
       },
       resultLab: {},
       kunjungans: [],
@@ -144,80 +145,91 @@ export default {
       dokters: [],
       labs: [],
       loading: true,
-    };
+    }
   },
   methods: {
     async fetchData() {
       try {
         const response = await axios.get(
           `http://103.101.224.67:8083/resultslab/${useRoute().params.id}`
-        );
-        this.resultLab = response.data.data;
-        this.dataForm.kunjungan_id = this.resultLab.kunjungan_id;
-        this.dataForm.user_id = this.resultLab.user_id;
-        this.dataForm.status = this.resultLab.status;
-        this.dataForm.lab_id = this.resultLab.lab_id;
+        )
+        this.resultLab = response.data.data
+        this.dataForm.kunjungan_id = this.resultLab.kunjungan_id
+        this.dataForm.user_id = this.resultLab.user_id
+        this.dataForm.status = this.resultLab.status
+        this.dataForm.lab_id = this.resultLab.lab_id
       } catch (error) {
-        console.error(error);
+        console.error(error)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     async getDokters() {
       try {
-        const response = await axios.get("http://103.101.224.67:8083/dokters");
-        this.dokters = response.data.data;
+        const response = await axios.get("http://103.101.224.67:8083/dokters")
+        this.dokters = response.data.data
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
     async getDataKunjungan() {
       const response = await axios.get(
         "http://103.101.224.67:8081/api/v1/kunjungan/"
-      );
-      this.kunjungans = response.data.data;
-      console.log(this.kunjungans);
+      )
+      this.kunjungans = response.data.data
     },
     async getDataLab() {
       try {
-        const response = await axios.get("http://103.101.224.67:8083/labs");
-        this.labs = response.data.data;
+        const response = await axios.get("http://103.101.224.67:8083/labs")
+        this.labs = response.data.data
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
     },
-    submitForm() {
-      console.log(this.dataForm);
+    handleFileUpload(event) {
+      const file = event.target.files[0]
+      this.dataForm.hasil_lab = file
+    },
+    async submitForm() {
       try {
-        const response = axios.put(
+        let data = new FormData()
+        data.append("kunjungan_id", this.dataForm.kunjungan_id)
+        data.append("user_id", this.dataForm.user_id)
+        data.append("hasil_lab", this.dataForm.hasil_lab)
+        data.append("status", this.dataForm.status)
+        data.append("lab_id", this.dataForm.lab_id)
+        data.append("description", this.dataForm.description)
+
+        const response = await axios.post(
           `http://103.101.224.67:8083/resultslab/${useRoute().params.id}`,
-          this.dataForm
-        );
+          this.dataForm,
+          {
+            "Content-Type": "multipart/form-data",
+            transformRequest: (formData) => data,
+          }
+        )
+
         if (response.status == 200) {
           Swal.fire({
             title: "Berhasil!",
             text: "Data berhasil di update!",
             icon: "success",
-          });
+          })
 
-          this.$router.push("/lab-radiologi/result-lab");
+          this.$router.push("/lab-radiologi/result-lab")
         }
       } catch (error) {
-        console.error(error);
+        console.error(error)
       }
-    },
-    handleFileUpload(event) {
-      const file = event.target.files[0];
-      this.dataForm.hasil_lab = file;
     },
   },
   beforeMount() {
-    this.fetchData();
-    this.getDataKunjungan();
-    this.getDokters();
-    this.getDataLab();
+    this.fetchData()
+    this.getDataKunjungan()
+    this.getDokters()
+    this.getDataLab()
   },
-};
+}
 </script>
 
 <style scoped>
